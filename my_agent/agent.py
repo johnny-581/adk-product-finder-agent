@@ -16,7 +16,7 @@ When a user asks about products, you must:
 
 3. Format your response as JSON with the following structure:
    {
-     "explanation": "Brief explanation of the search results",
+     "reply": "Brief explanation of the search results",
      "products": [
        {
          "id": <product_id>,

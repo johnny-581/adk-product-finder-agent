@@ -7,17 +7,8 @@ PRODUCTS: List[Dict] = []
 
 
 def filter_products(category: Optional[str] = None, min_price: Optional[float] = None, max_price: Optional[float] = None) -> List[Dict]:
-    """
-    Filter products based on category and price constraints.
+    print(f"Filtering products for category: {category}, min_price: {min_price}, max_price: {max_price}")
     
-    Args:
-        category: Category name to filter by (clothing, electronics, food, other). Case-insensitive.
-        min_price: Minimum price (inclusive)
-        max_price: Maximum price (inclusive)
-        
-    Returns:
-        List of filtered products matching the criteria
-    """
     filtered = PRODUCTS.copy()
     
     # Filter by category
@@ -36,10 +27,6 @@ def filter_products(category: Optional[str] = None, min_price: Optional[float] =
 
 
 def assign_category(product: Dict) -> str:
-    """
-    Assign a category to a product based on keyword matching in name and description.
-    Categories: clothing, electronics, food, other
-    """
     name = product.get("name", "").lower()
     description = product.get("description", "").lower()
     text = f"{name} {description}"
@@ -64,15 +51,6 @@ def assign_category(product: Dict) -> str:
 
 
 def load_products(json_path: str = "data.json") -> List[Dict]:
-    """
-    Load products from JSON file and add category field to each product.
-    
-    Args:
-        json_path: Path to the JSON file containing products
-        
-    Returns:
-        List of products with category field added
-    """
     file_path = Path(json_path)
     if not file_path.exists():
         raise FileNotFoundError(f"Product data file not found: {json_path}")
@@ -89,13 +67,6 @@ def load_products(json_path: str = "data.json") -> List[Dict]:
 
 
 def initialize_products(json_path: str) -> None:
-    """
-    Initialize the global PRODUCTS list by loading products from JSON file.
-    This should be called on application startup.
-    
-    Args:
-        json_path: Path to the JSON file containing products
-    """
     global PRODUCTS
     PRODUCTS = load_products(json_path)
     print(f"Loaded {len(PRODUCTS)} products")

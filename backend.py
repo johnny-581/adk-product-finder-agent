@@ -11,6 +11,8 @@ from google.genai.types import Content, Part
 from my_agent.agent import root_agent
 from product_loader import initialize_products
 import json
+from pydantic import BaseModel, Field, ValidationError
+from typing import List, Optional
 
 APP_NAME = "agents"
 session_service = InMemorySessionService()
@@ -76,15 +78,37 @@ async def chat(request: Request):
                 if hasattr(part, "text"):
                     reply += part.text
 
+    class Product(BaseModel):
+        id: int
+        name: str
+        description: str
+        price: float
+        image: str
+        category: Optional[str] = None
+
+    class AgentResponse(BaseModel):
+        reply: str = Field(alias="reply", default="")
+        products: List[Product] = Field(default_factory=list)
+
+    # validation using pydantic
     try:
-        # First, try parsing the entire reply as JSON
-        structured_data = json.loads(reply.strip())
-        if isinstance(structured_data, dict) and "products" in structured_data:
-            return JSONResponse({
-                "reply": structured_data.get("explanation", ""),
-                "products": structured_data.get("products", [])
-            })
-    except json.JSONDecodeError:
+        cleaned_reply = reply.strip()
+        if cleaned_reply.startswith("```json"):
+            cleaned_reply = cleaned_reply[7:]
+        elif cleaned_reply.startswith("```"):
+            cleaned_reply = cleaned_reply[3:]
+            
+        if cleaned_reply.endswith("```"):
+            cleaned_reply = cleaned_reply[:-3]
+
+        response_data = AgentResponse.model_validate_json(cleaned_reply.strip())
+        
+        return JSONResponse({
+            "reply": response_data.reply,
+            "products": [p.model_dump() for p in response_data.products]
+        })
+    except (json.JSONDecodeError, ValidationError):
+        # Fallback if the agent didn't return valid JSON
         return JSONResponse({
             "reply": reply,
             "products": []
