@@ -17,4 +17,5 @@ AGENT-OUTPUT: "Here are all the clothing products we have:"
 UBC Hoodie, T-Shirt, Denim Jacket, Running Shoes as Product Cards with their name, description, price, and image.
 
 USER-INPUT: “What clothing items are available under $50?”
+
 AGENT-BEHAVIOUR: The agent should apply both category filtering and price filtering, then return product cards.
