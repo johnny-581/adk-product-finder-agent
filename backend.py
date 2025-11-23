@@ -78,6 +78,7 @@ async def chat(request: Request):
                 if hasattr(part, "text"):
                     reply += part.text
 
+    # validation using pydantic
     class Product(BaseModel):
         id: int
         name: str
@@ -90,7 +91,6 @@ async def chat(request: Request):
         reply: str = Field(alias="reply", default="")
         products: List[Product] = Field(default_factory=list)
 
-    # validation using pydantic
     try:
         cleaned_reply = reply.strip()
         if cleaned_reply.startswith("```json"):
