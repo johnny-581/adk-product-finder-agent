@@ -1,13 +1,15 @@
 # Run the backend
 
-source .venv/bin/activate
+source .venv/bin/activate  
 uvicorn backend:app --reload
 
-# simple backend test
+# Simple Backend Test
 
 curl -X POST http://localhost:8000/chat \
  -H "Content-Type: application/json" \
  -d '{"message": "Show me all your clothing products."}'
+
+# Sample Interaction
 
 USER-INPUT: “Show me all your clothing products.”
 
